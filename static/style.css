@@ -1,0 +1,99 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	font-size: 2vmax;
+}
+
+@media (min-width: 1600px) {
+	html {
+		font-size: 1.5vw
+	}
+}
+
+body {
+	background-color:#f1f1f1;
+	font-family: "Open Sans", Arial, Helvetica, sans-serif;
+	line-height: 1.5;
+	color: #274192
+}
+
+img {
+	width: 4rem;
+	height: auto;
+	margin-bottom: .75rem
+}
+
+
+main {
+	margin: auto;
+	padding: 2vmin;
+	max-width: 30rem;
+}
+
+
+form {
+	max-width: 30rem
+}
+
+button {
+	background-color: #fafafa;
+	border: 1px solid #b1a166;
+	border-radius: .5rem;
+	box-shadow: 0 3px 10px #bababa;
+	color: inherit;
+	display: block;
+	font-family: inherit;
+	font-size: 1rem;
+	font-weight: 500;
+	margin: 0 0 1rem;
+	padding: .5rem;
+	text-align: left;
+	transition: all .5s;
+}
+
+button:hover, button:active, .pressed {
+	background-color: white;
+	box-shadow: none;
+	cursor: pointer
+}
+
+fieldset {
+	border: none;
+}
+
+legend {
+	margin-bottom: 1rem;
+}
+
+textarea {
+	border-radius: .5rem;
+	display: block;
+	font-family: inherit;
+	font-size: 1rem; 
+	height: 3rem;
+	padding: .5rem;
+	width: 100%
+}
+
+instructions {
+	font-size: .75rem;
+	margin-bottom: 1rem;
+}
+
+
+.hidden {
+	display: none;
+}
+
+.mobile-only {
+	display: none
+}
+
+@media only screen and (max-width: 760px) {
+	.mobile-only {
+		display: inline-block
+	}
+}

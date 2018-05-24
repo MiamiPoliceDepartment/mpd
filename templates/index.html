@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Tipster</title>
+	<!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"> -->
+	<!-- <link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet"> -->
+	<link href="../static/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+	<main>
+		<img src="../static/images/mpd_seal.png" alt="Seal of the Miami Police Department">
+		<div id="form-container">
+
+			<fieldset id="intro" class="">
+				<legend>Hi! I'm with the <strong>Miami Police Department</strong>. How can I help you?</legend>
+				<button value="emergency">I have an emergency</button>
+				<button value="tip">I'd like to submit an anonymous tip</button>
+			</fieldset>
+
+			<fieldset id="emergency" class="hidden">
+				<legend>If this is an emergency, then you need to <strong>call 911</strong>. <span class="mobile-only">Should I do that for you now?</span></legend>
+				<button value="call" class="mobile-only">Yes, call 911</button>
+			</fieldset>
+
+			<fieldset id="tip" class="hidden">
+				<legend>OK. What's this tip about?</legend>
+				<button value="drugs">A drug-related offense</button>
+				<button value="crime">Some other crime</button>
+				<button value="fugitive">A fugitive (someone hiding from the police)</button>
+			</fieldset>
+
+			<!-- Questions to determine nature of crime -->
+			<fieldset id="violent_crime" class="hidden">
+				<legend>Was it a violent crime?</legend>
+				<button value="homicide">Yes, someone was killed</button>
+				<button value="assault">Yes, someone was physically attacked, or threatened with violence</button>
+				<button value="sex offense">Yes, someone was raped or sexually assaulted</button>
+				<button value="">No</button>
+			</fieldset>
+
+			<fieldset id="robbery" class="hidden">
+				<legend>Was money or property taken from the victim?</legend>
+				<button value="yes">Yes</button>
+				<button value="">No</button>
+			</fieldset>
+
+			<fieldset id="domestic_violence" class="hidden">
+				<legend>Was this domestic violence?</legend>
+				<button value="yes">Yes</button>
+				<button value="">No</button>
+			</fieldset>
+
+			<fieldset id="property_crime" class="hidden">
+				<legend>Was it a theft or other property crime?</legend>
+				<button value="larceny">Yes, money or property was stolen</button>
+				<button value="damage">Yes, property was damaged or destroyed</button>
+				<button value="">No</button>
+			</fieldset>
+
+			<fieldset id="burglary" class="hidden">
+				<legend>Was the victim's home, vehicle, or business broken into?</legend>
+				<button value="yes">Yes</button>
+				<button value="">No</button>
+			</fieldset>
+
+			<fieldset id="arson" class="hidden">
+				<legend>Was it set on fire?</legend>
+				<button value="yes">Yes</button>
+				<button value="">No</button>
+			</fieldset>
+
+			<fieldset id="economic_crime" class="hidden">
+				<legend>Was it a scam, fraud, or identity theft?</legend>
+				<button value="fraud">Yes</button>
+				<button value="">No</button>
+			</fieldset>
+
+			<fieldset id="sex_crime" class="hidden">
+				<legend>Was it a sex offense?</legend>
+				<button value="prostitution">Yes, prostitution</button>
+				<button value="sex offense">Yes, someone was flashed, groped or sexually assaulted</button>
+				<button value="trafficking">Yes, someone was forced into porn or prostitution</button>
+				<button value="">No</button>
+			</fieldset>
+
+			<fieldset id="hit_and_run" class="hidden">
+				<legend>Was it a hit-and-run accident?</legend>
+				<button value="yes">Yes</button>
+				<button value="">No</button>
+			</fieldset>
+
+			<fieldset id="fatalities" class="hidden">
+				<legend>Was anyone killed?</legend>
+				<button value="yes">Yes</button>
+				<button value="">No</button>
+				<button value="">I don't know</button>
+			</fieldset>
+
+			<fieldset id="dui" class="hidden">
+				<legend>Was the driver drunk or on drugs?</legend>
+				<button value="yes">Yes</button>
+				<button value="">No</button>
+				<button value="">I don't know</button>
+			</fieldset>
+
+			<fieldset id="when" class="hidden">
+				<legend>When did this happen?</legend>
+				<button value="today">Today</button>
+				<button value="prompt">Some other date</button>
+				<button value="">I'm not sure</button>
+			</fieldset>
+
+			<fieldset id="when_prompt" class="hidden">
+				<legend>Describe when it happened as best you can. I prefer exact dates and times, but I can also work with a general description.</legend>
+				<textarea maxlength="300"></textarea>
+				<label class="instructions">Press Enter ↵ when you're finished</label>
+			</fieldset>
+
+			<fieldset id="where" class="hidden">
+				<legend>OK. Do you know where this happened?</legend>
+				<button value="prompt">Yes</button>
+				<button value="">No</button>
+			</fieldset>
+
+			<fieldset id="where_prompt" class="hidden">
+				<legend>Describe the location as best you can. I prefer street addresses, but I can also work with a general description.</legend>
+				<textarea maxlength="300"></textarea>
+				<label class="instructions">Press Enter ↵ when you're finished</label>
+			</fieldset>
+
+			<fieldset id="misc" class="hidden">
+				<legend>Are there any details we haven't discussed?</legend>
+				<button value="prompt">Yes</button>
+				<button value="">No</button>
+			</fieldset>
+
+			<fieldset id="misc_prompt" class="hidden">
+				<legend>OK. Tell me more.</legend>
+				<textarea maxlength="300"></textarea>
+				<label class="instructions">Press Enter ↵ when you're finished</label>
+			</fieldset>
+
+			<!-- Questions about the suspect(s) -->
+			<fieldset id="who" class="hidden">
+				<legend>Do you have any information about the suspect(s)?</legend>
+				<button value="yes">Yes</button>
+				<button value="">No</button>
+			</fieldset>
+			
+			<fieldset id="gender" class="hidden">
+				<legend>Great! Let's start with the basics. Is this person male or female?</legend>
+				<button value="male">Male</button>
+				<button value="female">Female</button>
+				<button value="unknown">I'm not sure</button>
+			</fieldset>
+			
+			<fieldset id="name" class="hidden">
+				<legend>Do you know <span class="pronoun-possessive">this person's</span> legal name?</legend>
+				<button value="prompt">Yes</button>
+				<button value="">No</button>
+			</fieldset>
+
+			<fieldset id="name_prompt" class="hidden">
+				<legend>Great! What is it (first, middle, last)?</legend>
+				<textarea maxlength="70"></textarea>
+				<instructions>Press Enter ↵ when you're finished</instructions>
+			</fieldset>
+
+			<fieldset id="alias" class="hidden">
+				<legend>What about aliases or nicknames? Does <span class="pronoun-subject">this suspect</span> have any?</legend>
+				<button value="prompt">Yes</button>
+				<button value="">No</button>
+				<button value="">I'm not sure</button>
+			</fieldset>
+
+			<fieldset id="alias_prompt" class="hidden">
+				<legend>Give me any aliases you know for <span class="pronoun-object">this suspect</span>.</legend>
+				<textarea maxlength="300"></textarea>
+				<instructions>Press Enter ↵ when you're finished</instructions>
+			</fieldset>
+
+			
+			<fieldset id="age" class="hidden">
+				<legend>Do you know how old <span class="pronoun-subject">this suspect</span> is?</legend>
+				<button value="juvenile">Juvenile (under 18)</button>
+				<button value="young adult">Young Adult (18–30)</button>
+				<button value="adult">Adult (30–45)</button>
+				<button value="middle-aged">Middle-aged (45–60)</button>
+				<button value="senior">Senior (60+)</button>
+				<button value="">I'm not sure</button>
+			</fieldset>
+
+			<fieldset id="physical_description" class="hidden">
+				<legend>Would you be able to give me a physical description?</legend>
+				<button value="yes">Yes</button>
+				<button value="">No</button>
+			</fieldset>
+
+			<fieldset id="height" class="hidden">
+				<legend>Excellent. How tall is <span class="pronoun-subject">this suspect</span>?</legend>
+				<button value="below-average">Short</button>
+				<button value="average">Average</button>
+				<button value="above-average">Tall</button>
+				<button value="">I'm not sure</button>
+			</fieldset>
+
+			<fieldset id="weight" class="hidden">
+				<legend>What is <span class="pronoun-possessive">this suspect's</span> weight?</legend>
+				<button value="below-average">Thin</button>
+				<button value="average">Average</button>
+				<button value="above-average">Heavy</button>
+				<button value="">I'm not sure</button>
+			</fieldset>
+
+			<fieldset id="skin" class="hidden">
+				<legend>How would you describe <span class="pronoun-possessive">this suspect's</span> skin color?</legend>
+				<button value="light">Light</button>
+				<button value="medium">Medium</button>
+				<button value="dark">Dark</button>
+				<button value="">I'm not sure</button>
+			</fieldset>
+
+			<fieldset id="hair" class="hidden">
+				<legend>Does <span class="pronoun-subject">this suspect</span> have hair?</legend>
+				<button value="yes">Yes</button>
+				<button value="no">No</button>
+				<button value="">I'm not sure</button>
+			</fieldset>
+
+			<fieldset id="hair_length" class="hidden">
+				<legend>How long is <span class="pronoun-possessive">this suspect's</span> hair?</legend>
+				<button value="short">Short</button>
+				<button value="medium">Medium</button>
+				<button value="long">Long</button>
+			</fieldset>
+
+			<fieldset id="hair_color" class="hidden">
+				<legend>What color is <span class="pronoun-possessive">this suspect's</span> hair?</legend>
+				<button value="gray">White or gray</button>
+				<button value="black">Black</button>
+				<button value="brown">Brown</button>
+				<button value="red">Red</button>
+				<button value="blond">Blond or strawberry blond</button>
+				<button value="prompt">Other</button>
+			</fieldset>
+
+			<fieldset id="hair_color_prompt" class="hidden">
+				<legend>Briefly describe the hair color (e.g., "dyed blue"):</legend>
+				<textarea maxlength="50"></textarea>
+				<instructions>Press Enter ↵ when you're finished</instructions>
+			</fieldset>
+
+			<fieldset id="hair_type" class="hidden">
+				<legend>Is <span class="pronoun-possessive">this suspect's</span> hair curly or straight?</legend>
+				<button value="curly">Curly</button>
+				<button value="straight">Straight</button>
+				<button value="">I'm not sure</button>
+			</fieldset>
+
+			<fieldset id="facial_hair" class="hidden">
+				<legend>What about facial hair?</legend>
+				<button value="clean-shaven">None (clean-shaven)</button>
+				<button value="a stubble beard">Stubble</button>
+				<button value="a mustache">Mustache</button>
+				<button value="a goatee">Goatee</button>
+				<button value="a full beard">Beard</button>
+				<button value="">I'm not sure</button>
+			</fieldset>
+
+			<fieldset id="eyes" class="hidden">
+				<legend>What color are <span class="pronoun-possessive">this suspect's</span> eyes?</legend>
+				<button value="brown">Brown</button>
+				<button value="blue">Blue</button>
+				<button value="hazel">Hazel or greenish-brown</button>
+				<button value="other">Other</button>
+				<button value="">I'm not sure</button>
+			</fieldset>
+
+			<fieldset id="eyes_other" class="hidden">
+				<legend>These eye colors are very rare:</legend>
+				<button value="amber">Amber or copper</button>
+				<button value="gray">Gray</button>
+				<button value="green">Green</button>
+				<button value="red">Red, pink or violet (albinism)</button>
+				<button value="different colored">Each eye is a different color</button>
+			</fieldset>
+
+			<fieldset id="glasses" class="hidden">
+				<legend>Does <span class="pronoun-subject">this suspect</span> wear glasses?</legend>
+				<button value="yes">Yes</button>
+				<button value="">No</button>
+				<button value="">I'm not sure</button>
+			</fieldset>
+
+			<fieldset id="marks" class="hidden">
+				<legend>Does <span class="pronoun-subject">this suspect</span> have any unusual physical features (e.g., scars, piercings, birthmarks, or tattoos)?</legend>
+				<button value="prompt">Yes</button>
+				<button value="">No</button>
+				<button value="">I'm not sure</button>
+			</fieldset>
+
+			<fieldset id="marks_prompt" class="hidden">
+				<legend>Describe them. What do they look like? Where are they on <span class="pronoun-possessive">this suspect's</span> body?</legend>
+				<textarea maxlength="300"></textarea>
+				<instructions>Press Enter ↵ when you're finished</instructions>
+			</fieldset>
+
+			<fieldset id="armed" class="hidden">
+				<legend>OK. Just a few more questions. Is <span class="pronoun-subject">this suspect</span> armed?</legend>
+				<button value="firearm">Yes, <span class="pronoun-subject">this suspect</span> has a firearm</button>
+				<button value="knife">Yes, <span class="pronoun-subject">this suspect</span> has a knife or blade</button>
+				<button value="deadly weapon other than a firearm or knife">Yes, <span class="pronoun-subject">this suspect</span> has some other deadly weapon</button>
+				<button value="">I'm not sure</button>
+			</fieldset>
+
+			<fieldset id="gang_member" class="hidden">
+				<legend>Is <span class="pronoun-subject">this suspect</span> a gang member?</legend>
+				<button value="yes">Yes</button>
+				<button value="">No</button>
+				<button value="">I'm not sure</button>
+			</fieldset>
+
+			<fieldset id="gang_name" class="hidden">
+				<legend>Do you know which gang?</legend>
+				<button value="prompt">Yes</button>
+				<button value="">No</button>
+			</fieldset>
+
+			<fieldset id="gang_name_prompt" class="hidden">
+				<legend>Great. What's the name of the gang?</legend>
+				<textarea maxlength="100"></textarea>
+				<instructions>Press Enter ↵ when you're finished</instructions>
+			</fieldset>
+
+			<fieldset id="suspect_location" class="hidden">
+				<legend>OK. Do you know where we can find <span class="pronoun-object">this suspect</span>?</legend>
+				<button value="prompt">Yes</button>
+				<button value="">No</button>
+			</fieldset>
+
+			<fieldset id="suspect_location_prompt" class="hidden">
+				<legend>Great! I'd prefer a street address, but a general description is fine, too. </legend>
+				<textarea maxlength="300"></textarea>
+				<instructions>Press Enter ↵ when you're finished</instructions>
+			</fieldset>
+
+			<fieldset id="suspect_location_time" class="hidden">
+				<legend>When is <span class="pronoun-object">this suspect</span> usually at that location?</legend>
+				<button value="0000–0600">Midnight to sunrise</button>
+				<button value="0600–1200">Sunrise to noon</button>
+				<button value="1200–1800">Noon to sunset</button>
+				<button value="1800–2400">Sunset to midnight</button>
+				<button value="">No</button>
+			</fieldset>
+
+			<fieldset id="dogs" class="hidden">
+				<legend>Are there dogs at this location?</legend>
+				<button value="yes">Yes</button>
+				<button value="">No</button>
+			</fieldset>
+
+			<fieldset id="vehicle" class="hidden">
+				<legend>OK. Do you know anything about <span class="pronoun-possessive">the suspect's</span> vehicle?</legend>
+				<button value="prompt">Yes</button>
+				<button value="">No</button>
+			</fieldset>
+
+			<fieldset id="vehicle_make" class="hidden">
+				<legend>Do you know the vehicle's make (e.g., Ford, Honda, Toyota)? </legend>
+				<button value="prompt">Yes</button>
+				<button value="">No</button>
+			</fieldset>
+
+			<fieldset id="vehicle_make_select" class="hidden">
+				<legend>Great. Let's drill down to find the manufacturer:</legend>
+				<button value="1">Acura to Chevrolet</button>
+				<button value="2">Chrysler to Honda</button>
+				<button value="3">Hummer to Lamborghini</button>
+				<button value="4">Land Rover to Mini</button>
+				<button value="5">Mitsubishi to Saturn</button>
+				<button value="6">Scion to Volvo</button>
+				<button value="prompt">Other</button>
+			</fieldset>
+
+			<fieldset id="vehicle_make_1" class="hidden">
+				<legend>Select the manufacturer:</legend>
+				<button value="Acura">Acura</button>
+				<button value="Alfa Romeo">Alfa Romeo</button>
+				<button value="Aston Martin">Aston Martin</button>
+				<button value="Audi">Audi</button>
+				<button value="Bentley">Bentley</button>
+				<button value="BMW">BMW</button>
+				<button value="Buick">Buick</button>
+				<button value="Cadillac">Cadillac</button>
+				<button value="Chevrolet">Chevrolet</button>
+			</fieldset>
+
+			<fieldset id="vehicle_make_2" class="hidden">
+				<legend>Select the manufacturer:</legend>
+				<button value="Chrysler">Chrysler</button>
+				<button value="Dodge">Dodge</button>
+				<button value="Ferrari">Ferrari</button>
+				<button value="Fiat">Fiat</button>
+				<button value="Ford">Ford</button>
+				<button value="Freightliner">Freightliner</button>
+				<button value="Genesis">Genesis</button>
+				<button value="GMC">GMC</button>
+				<button value="Honda">Honda</button>
+			</fieldset>
+
+			<fieldset id="vehicle_make_3" class="hidden">
+				<legend>Select the manufacturer:</legend>
+				<button value="Hummer">Hummer</button>
+				<button value="Hyundai">Hyundai</button>
+				<button value="Infiniti">Infiniti</button>
+				<button value="International">International</button>
+				<button value="Isuzu">Isuzu</button>
+				<button value="Jaguar">Jaguar</button>
+				<button value="Jeep">Jeep</button>
+				<button value="Kia">Kia</button>
+				<button value="Lamborghini">Lamborghini</button>
+			</fieldset>
+
+			<fieldset id="vehicle_make_4" class="hidden">
+				<legend>Select the manufacturer:</legend>
+				<button value="Land Rover">Land Rover</button>
+				<button value="Lexus">Lexus</button>
+				<button value="Lincoln">Lincoln</button>
+				<button value="Lotus">Lotus</button>
+				<button value="Maserati">Maserati</button>
+				<button value="Mazda">Mazda</button>
+				<button value="Mercedes-Benz">Mercedes-Benz</button>
+				<button value="Mercury">Mercury</button>
+				<button value="Mini">Mini</button>
+			</fieldset>
+
+			<fieldset id="vehicle_make_5" class="hidden">
+				<legend>Select the manufacturer:</legend>
+				<button value="Mitsubishi">Mitsubishi</button>
+				<button value="Nissan">Nissan</button>
+				<button value="Oldsmobile">Oldsmobile</button>
+				<button value="Pontiac">Pontiac</button>
+				<button value="Porsche">Porsche</button>
+				<button value="Ram">Ram</button>
+				<button value="Rolls-Royce">Rolls-Royce</button>
+				<button value="Saab">Saab</button>
+				<button value="Saturn">Saturn</button>
+			</fieldset>
+
+			<fieldset id="vehicle_make_6" class="hidden">
+				<legend>Select the manufacturer:</legend>
+				<button value="Scion">Scion</button>
+				<button value="Smart">Smart</button>
+				<button value="Sterling">Sterling</button>
+				<button value="Subaru">Subaru</button>
+				<button value="Suzuki">Suzuki</button>
+				<button value="Tesla">Tesla</button>
+				<button value="Toyota">Toyota</button>
+				<button value="Volkswagen">Volkswagen</button>
+				<button value="Volvo">Volvo</button>
+			</fieldset>
+
+			<fieldset id="vehicle_make_prompt" class="hidden">
+				<legend>Must be an old or rare car. Who's the manufacturer?</legend>
+				<textarea maxlength="50"></textarea>
+				<instructions>Press Enter ↵ when you're finished</instructions>
+			</fieldset>
+			
+			<fieldset id="vehicle_model" class="hidden">
+				<legend>Got it. Do you also know the model (e.g., F-150, Accord, Camry)?</legend>
+				<button value="prompt">Yes</button>
+				<button value="">No</button>
+			</fieldset>
+			
+			<fieldset id="vehicle_model_prompt" class="hidden">
+				<legend>Excellent. What's the model?</legend>
+				<textarea maxlength="50"></textarea>
+				<instructions>Press Enter ↵ when you're finished</instructions>
+			</fieldset>
+
+			<fieldset id="vehicle_type" class="hidden">
+				<legend>No problem. Do you at least know which type of vehicle it is?</legend>
+				<button value="sedan">Sedan (4-door)</button>
+				<button value="coupe">Coupe (2-door)</button>
+				<button value="hatchback">Hatchback or Station Wagon</button>
+				<button value="SUV">SUV or Crossover</button>
+				<button value="sportscar">Sports Car</button>
+				<button value="pickup">Pickup Truck</button>
+				<button value="van or minivan">Van or Minivan</button>
+				<button value="tractor-trailer">Semi Truck or Tractor-Trailer</button>
+				<button value="">I'm not sure</button>
+			</fieldset>
+
+			<fieldset id="vehicle_age" class="hidden">
+				<legend>OK. How old is this vehicle?</legend>
+				<button value="late-model">New or late-model (less than 5 years old)</button>
+				<button value="used">Used</button>
+				<button value="classic">Classic (25+ years old)</button>
+				<button value="">I'm not sure</button>
+			</fieldset>
+
+			<fieldset id="vehicle_color" class="hidden">
+				<legend>What color is it?</legend>
+				<button value="white">White</button>
+				<button value="black">Black</button>
+				<button value="silver">Silver</button>
+				<button value="gray">Gray</button>
+				<button value="red">Red</button>
+				<button value="blue">Blue</button>
+				<button value="brown">Brown/Beige</button>
+				<button value="green">Green</button>
+				<button value="orange">Orange/Rust</button>
+				<button value="yellow">Yellow/Gold</button>
+				<button value="purple">Purple</button>
+				<button value="prompt">Other/Custom</button>
+				<button value="">I'm not sure</button>
+			</fieldset>
+
+			<fieldset id="vehicle_color_prompt" class="hidden">
+				<legend>Interesting. Describe the color(s) as best you can.</legend>
+				<textarea maxlength="100"></textarea>
+				<instructions>Press Enter ↵ when you're finished</instructions>
+			</fieldset>
+
+			<fieldset id="vehicle_marks" class="hidden">
+				<legend>OK. Almost done. Is there anything about the vehicle that stands out (e.g., dirty, dents, bumper stickers, graphics, blackout tints, lifted/lowered)?</legend>
+				<button value="prompt">Yes</button>
+				<button value="">No</button>
+				<button value="">I'm not sure</button>
+			</fieldset>
+
+			<fieldset id="vehicle_marks_prompt" class="hidden">
+				<legend>Tell me more about that, in as much detail as you can.</legend>
+				<textarea maxlength="300"></textarea>
+				<instructions>Press Enter ↵ when you're finished</instructions>
+			</fieldset>
+
+			<fieldset id="vehicle_tag" class="hidden">
+				<legend>Last vehicle question. Did you catch the tag number?</legend>
+				<button value="prompt">Yes</button>
+				<button value="">No</button>
+			</fieldset>
+
+			<fieldset id="vehicle_tag_prompt" class="hidden">
+				<legend>What's the number?</legend>
+				<textarea maxlength="10"></textarea>
+				<instructions>Press Enter ↵ when you're finished</instructions>
+			</fieldset>
+
+			<fieldset id="another_suspect" class="hidden">
+				<legend>OK. That's all I need to know about <span class="suspect-name">this person</span>.<p>Is there a	<span id="suspect-ordinal">second</span> suspect?</p>
+				</legend>
+				<button value="yes">Yes</button>
+				<button value="">No</button>
+			</fieldset>
+
+			<fieldset id="submit" class="hidden">
+				<legend>Alright. That's everything I need to know. Can I send your tip to the police now?</legend>
+				<button value="yes">Yes, I'm done</button>
+			</fieldset>
+
+			<div id="end" class="hidden">
+				Great. I've let the police know. Thank you for reporting!
+			</div>
+
+		<button id="back" class="hidden">← Back</button>
+
+	</main>
+
+	<!-- JavaScript -->
+	<script src="../static/index.js"></script>
+	<script src="../static/router.js"></script>
+
+</body>
+
+</html>
