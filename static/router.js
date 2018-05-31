@@ -17,7 +17,30 @@ function handleSelection(ans, question) {
 				tip.category = ans 
 				nextQuestion("gender") // Skip crime questions
 			} 
+			else if (ans == "drugs") nextQuestion("drug_activity")
 			else nextQuestion("violent_crime")
+		},
+
+		// DRUGS --------------------------------
+
+		drug_activity: ans => {
+			if (ans) tip.category = "Narcotics " + ans
+			nextQuestion("drug_type")
+		},
+
+		drug_type: ans => {
+			if (ans == "prompt") nextQuestion("drug_type_prompt")
+			else {
+				tip.category += ` (${ans})`
+				nextQuestion("who")
+			}
+		},
+
+		drug_type_prompt: ans => {
+			if (ans) {
+				tip.category += ` (${ans})`
+				nextQuestion("who")
+			}
 		},
 
 		// TYPE OF CRIME ------------------------
@@ -151,7 +174,7 @@ function handleSelection(ans, question) {
 		// Do you have any info about the suspect?
 		who: ans => {
 			if (ans) nextQuestion("gender")
-			else nextQuestion("misc") // Skip suspect questions
+			else nextQuestion("vehicle") // Skip to vehicle questions
 		},
 
 		// Male or female?
@@ -169,7 +192,7 @@ function handleSelection(ans, question) {
 		},
 
 		name_prompt: ans => {
-			suspect.name = ans
+			suspect.name += ans
 			if (ans) setName(ans)
 			nextQuestion("alias")
 		},
@@ -181,22 +204,40 @@ function handleSelection(ans, question) {
 		},
 
 		alias_prompt: ans => {
-			suspect.alias = ans
+			suspect.aliases = ans
 			nextQuestion("age")
 		},
 
 		// Age?
 		age: ans => {
 			suspect.age = ans
-			nextQuestion("physical_description")
+			nextQuestion("ethnicity")
 		},
 
 		
 		// PHYSICAL APPEARANCE ------------------
 
-		physical_description: ans => {
-			if (ans) nextQuestion("skin")
-			else nextQuestion("armed")
+		
+		// Ethnicity?
+		ethnicity: ans => {
+			if (ans == "other") nextQuestion("ethnicity_other")
+			else {
+				suspect.ethnicity = ans
+				nextQuestion("skin")
+			}
+		},
+
+		ethnicity_other: ans => {
+			if (ans == "prompt") nextQuestion("ethnicity_prompt")
+			else {
+				suspect.ethnicity = ans
+				nextQuestion("skin")
+			}
+		},
+
+		ethnicity_prompt: ans => {
+			suspect.ethnicity = ans
+			nextQuestion("skin")
 		},
 
 		// Skin tone?
@@ -250,39 +291,45 @@ function handleSelection(ans, question) {
 
 		// Is the hair curly?
 		hair_type: ans => {
-			if (ans) suspect.hair_type = ans
+			suspect.hair_type = ans
 			if (suspect.gender == "male") nextQuestion("facial_hair")
 			else nextQuestion("marks")
 		},
 
 		// Facial hair?
 		facial_hair: ans => {
-			if (ans) suspect.facial_hair = ans
+			suspect.facial_hair = ans
 			nextQuestion("eyes")
 		},
 
 		// Eye color?
 		eyes: ans => {
 			if (ans == "other") nextQuestion("eyes_other")
-			else if (ans) suspect.eyes = ans
-			else nextQuestion("marks")
+			else {
+				suspect.eyes = ans
+				nextQuestion("glasses")
+			}
+		},
+		eyes_other: ans => {
+			suspect.eyes = ans
+			nextQuestion("glasses")
 		},
 
 		// Glasses?
 		glasses: ans => {
-			if (ans) suspect.glasses = ans
+			suspect.glasses = ans
 			nextQuestion("marks")
 		},
 
 		// Visible marks?
 		marks: ans => {
 			if (ans == "prompt") nextQuestion("marks_prompt")
-			else nextQuestion("name")
+			else nextQuestion("armed")
 		},
 
 		marks_prompt: ans => {
-			if (ans) suspect.marks = ans
-			nextQuestion("name")
+			suspect.marks = ans
+			nextQuestion("armed")
 		},
 
 		// MISC PERSONAL DETAILS
@@ -309,7 +356,7 @@ function handleSelection(ans, question) {
 		},
 
 		gang_name_prompt: ans => {
-			if (ans) suspect.gang = ans
+			suspect.gang = ans
 			nextQuestion("suspect_location")
 		},
 
@@ -321,19 +368,24 @@ function handleSelection(ans, question) {
 		},
 
 		suspect_location_prompt: ans => {
-			if (ans) suspect.location = ans
-			nextQuestion("dogs") // ask about dogs
+			suspect.location = ans
+			nextQuestion("suspect_location_time") // ask about dogs
 		},
 
 		// When is suspect usually there?
 		suspect_location_time: ans => {
-			if (ans) suspect.location_time = ans
-			nextQuestion("dogs")
+			suspect.location_time = ans
+			nextQuestion("children")
 		},
 		
 		// Dogs at this location?
+		children: ans => {
+			suspect.dogs = ans
+			nextQuestion("dogs")
+		},
+		// Dogs at this location?
 		dogs: ans => {
-			if (ans) suspect.dogs = ans
+			suspect.dogs = ans
 			nextQuestion("vehicle")
 		},
 
@@ -342,7 +394,7 @@ function handleSelection(ans, question) {
 		// Know anything about it?
 		vehicle: ans => {
 			if (ans) nextQuestion("vehicle_make")
-			else nextQuestion("misc")
+			else nextQuestion("another_suspect")
 		},
 
 		// Make?
@@ -353,44 +405,39 @@ function handleSelection(ans, question) {
 
 		// Drill down to select a make
 		vehicle_make_select: ans => {
-			if (ans == "1") nextQuestion("vehicle_make_1")
-			if (ans == "2") nextQuestion("vehicle_make_2")
-			if (ans == "3") nextQuestion("vehicle_make_3")
-			if (ans == "4") nextQuestion("vehicle_make_4")
-			if (ans == "5") nextQuestion("vehicle_make_5")
-			if (ans == "6") nextQuestion("vehicle_make_6")
 			if (ans == "prompt") nextQuestion("vehicle_make_prompt")
+			else nextQuestion(ans)
 		},
 
 		// Select make from submenu
 		vehicle_make_1: ans => {
-			if (ans) suspect.vehicle_make = ans
+			suspect.vehicle_make = ans
 			nextQuestion("vehicle_model")
 		},
 		vehicle_make_2: ans => {
-			if (ans) suspect.vehicle_make = ans
+			suspect.vehicle_make = ans
 			nextQuestion("vehicle_model")
 		},
 		vehicle_make_3: ans => {
-			if (ans) suspect.vehicle_make = ans
+			suspect.vehicle_make = ans
 			nextQuestion("vehicle_model")
 		},
 		vehicle_make_4: ans => {
-			if (ans) suspect.vehicle_make = ans
+			suspect.vehicle_make = ans
 			nextQuestion("vehicle_model")
 		},
 		vehicle_make_5: ans => {
-			if (ans) suspect.vehicle_make = ans
+			suspect.vehicle_make = ans
 			nextQuestion("vehicle_model")
 		},
 		vehicle_make_6: ans => {
-			if (ans) suspect.vehicle_make = ans
+			suspect.vehicle_make = ans
 			nextQuestion("vehicle_model")
 		},
 
 		// Old or rare make?
 		vehicle_make_prompt: ans => {
-			if (ans) suspect.vehicle_make = ans
+			suspect.vehicle_make = ans
 			nextQuestion("vehicle_model")
 		},
 
@@ -400,31 +447,39 @@ function handleSelection(ans, question) {
 			else nextQuestion("vehicle_type")
 		},
 		vehicle_model_prompt: ans => {
-			if (ans) suspect.vehicle_model = ans
+			suspect.vehicle_model = ans
 			nextQuestion("vehicle_age")
 		},
 
 		// Type?
 		vehicle_type: ans => {
-			if (ans) suspect.vehicle_type = ans
+			suspect.vehicle_type = ans
 			nextQuestion("vehicle_age")
 		},
 
 		// Vehicle age?
 		vehicle_age: ans => {
-			if (ans) suspect.vehicle_age = ans
+			suspect.vehicle_age = ans
 			nextQuestion("vehicle_color")
 		},
 
 		// Color?
 		vehicle_color: ans => {
-			if (ans == "prompt") nextQuestion("vehicle_color_prompt")
-			else if (ans) suspect.vehicle_color = ans
-			nextQuestion("vehicle_marks")
+			if (ans == "other") nextQuestion("vehicle_color_other")
+			else {
+				suspect.vehicle_color = ans
+				nextQuestion("vehicle_marks")
+			} 
 		},
-
+		vehicle_color_other: ans => {
+			if (ans == "prompt") nextQuestion("vehicle_color_prompt")
+			else {
+				suspect.vehicle_color = ans
+				nextQuestion("vehicle_marks")
+			}
+		},
 		vehicle_color_prompt: ans => {
-			if (ans) suspect.vehicle_color = ans
+			suspect.vehicle_color = ans
 			nextQuestion("vehicle_marks")
 		},
 
@@ -435,7 +490,7 @@ function handleSelection(ans, question) {
 		},
 
 		vehicle_marks_prompt: ans => {
-			if (ans) suspect.vehicle_marks = ans
+			suspect.vehicle_marks = ans
 			nextQuestion("vehicle_tag")
 		},
 		
@@ -446,7 +501,7 @@ function handleSelection(ans, question) {
 		},
 
 		vehicle_tag_prompt: ans => {
-			if (ans) suspect.vehicle_tag = ans
+			suspect.vehicle_tag = ans
 			// If user has reported less than 5 suspects, ask if there are more
 			if (suspect.count < 5) nextQuestion("another_suspect")
 			else nextQuestion("misc")
@@ -472,7 +527,8 @@ function handleSelection(ans, question) {
 					today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()
 				const timestamp = date + " " + time
 				tip.timestamp = timestamp
-				submitForm(tip) // Send data to backend
+				console.log(tip)
+				// submitForm(tip) // Send data to backend
 				nextQuestion("end")
 			}
 		}
