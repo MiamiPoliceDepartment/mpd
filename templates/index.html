@@ -33,32 +33,6 @@
 				<button value="fugitive">A fugitive (someone hiding from the police)</button>
 			</fieldset>
 
-			<!-- Questions about drug activity -->
-			<fieldset id="drug_activity" class="hidden">
-				<legend>What kind of drug activity?</legend>
-				<button value="Possession">Possession or use</button>
-				<button value="Distribution">Dealing or smuggling</button>
-				<button value="Manufacturing">Growing or manufacturing</button>
-			</fieldset>
-
-			<fieldset id="drug_type" class="hidden">
-				<legend>What type of drugs?</legend>
-				<button value="opioids">Prescription Pills (e.g. Fentanyl, Vicodin, OxyContin)</button>
-				<button value="marijuana">Marijuana</button>
-				<button value="cocaine">Cocaine</button>
-				<button value="heroin">Heroin</button>
-				<button value="MDMA">MDMA (Ecstasy)</button>
-				<button value="prompt">Other</button>
-				<button value="">Not sure</button>
-			</fieldset>
-
-			<fieldset id="drug_type_prompt" class="hidden">
-				<legend>Briefly identify the drug (e.g., Meth, LSD):</legend>
-				<textarea maxlength="50"></textarea>
-				<label class="instructions">Press "Enter" or click "Submit" when you're done</label>
-				<button class="submit">Submit</button>
-			</fieldset>
-
 			<!-- Questions to determine nature of crime -->
 			<fieldset id="violent_crime" class="hidden">
 				<legend>Was it a violent crime?</legend>
@@ -70,46 +44,46 @@
 
 			<fieldset id="robbery" class="hidden">
 				<legend>Was money or property taken from the victim?</legend>
-				<button value="yes">Yes</button>
+				<button value="Robbery">Yes</button>
 				<button value="">No</button>
 			</fieldset>
 
 			<fieldset id="domestic_violence" class="hidden">
 				<legend>Was this domestic violence?</legend>
-				<button value="yes">Yes</button>
-				<button value="">No</button>
+				<button value="Domestic Violence">Yes</button>
+				<button value="Assault">No</button>
 			</fieldset>
 
 			<fieldset id="property_crime" class="hidden">
 				<legend>Was it a theft or other property crime?</legend>
-				<button value="larceny">Yes, money or property was stolen</button>
-				<button value="damage">Yes, property was damaged or destroyed (but not stolen)</button>
+				<button value="stolen">Yes, money or property was stolen</button>
+				<button value="damaged">Yes, property was damaged or destroyed (but not stolen)</button>
 				<button value="">No</button>
 			</fieldset>
 
 			<fieldset id="burglary" class="hidden">
 				<legend>Was the victim's home, vehicle, or business broken into?</legend>
-				<button value="yes">Yes</button>
-				<button value="">No</button>
+				<button value="Burglary">Yes</button>
+				<button value="Larceny">No</button>
 			</fieldset>
 
 			<fieldset id="arson" class="hidden">
 				<legend>Was it set on fire?</legend>
-				<button value="yes">Yes</button>
-				<button value="">No</button>
+				<button value="Arson">Yes</button>
+				<button value="Vandalism">No</button>
 			</fieldset>
 
 			<fieldset id="economic_crime" class="hidden">
 				<legend>Was it a scam, fraud, or identity theft?</legend>
-				<button value="fraud">Yes</button>
+				<button value="Fraud">Yes</button>
 				<button value="">No</button>
 			</fieldset>
 
 			<fieldset id="sex_crime" class="hidden">
 				<legend>Was it a sex offense?</legend>
-				<button value="prostitution">Yes, prostitution</button>
-				<button value="sex offense">Yes, someone was flashed, groped or sexually assaulted</button>
-				<button value="trafficking">Yes, someone was forced into porn or prostitution</button>
+				<button value="Prostitution">Yes, prostitution</button>
+				<button value="Sex Offense">Yes, someone was flashed, groped or sexually assaulted</button>
+				<button value="Trafficking">Yes, someone was forced into porn or prostitution</button>
 				<button value="">No</button>
 			</fieldset>
 
@@ -169,6 +143,32 @@
 			<fieldset id="misc_prompt" class="hidden">
 				<legend>OK. Tell me more.</legend>
 				<textarea maxlength="300"></textarea>
+				<label class="instructions">Press "Enter" or click "Submit" when you're done</label>
+				<button class="submit">Submit</button>
+			</fieldset>
+
+			<!-- Questions about drug activity -->
+			<fieldset id="drug_activity" class="hidden">
+				<legend>What kind of drug activity was <span class="pronoun-subject">this person</span> involved in?</legend>
+				<button value="Possession">Possession or use</button>
+				<button value="Distribution">Dealing or smuggling</button>
+				<button value="Manufacturing">Growing or manufacturing</button>
+			</fieldset>
+
+			<fieldset id="drug_type" class="hidden">
+				<legend>What type of drugs?</legend>
+				<button value="opioids">Prescription Pills (e.g. Fentanyl, Vicodin, OxyContin)</button>
+				<button value="marijuana">Marijuana</button>
+				<button value="cocaine">Cocaine</button>
+				<button value="heroin">Heroin</button>
+				<button value="MDMA">MDMA (Ecstasy)</button>
+				<button value="prompt">Other</button>
+				<button value="">Not sure</button>
+			</fieldset>
+
+			<fieldset id="drug_type_prompt" class="hidden">
+				<legend>Briefly identify the drug (e.g., Meth, LSD):</legend>
+				<textarea maxlength="50"></textarea>
 				<label class="instructions">Press "Enter" or click "Submit" when you're done</label>
 				<button class="submit">Submit</button>
 			</fieldset>
@@ -334,7 +334,7 @@
 				<button value="amber">Amber or copper</button>
 				<button value="gray">Gray</button>
 				<button value="green">Green</button>
-				<button value="red">Red, pink or violet (albinism)</button>
+				<button value="red">Red, pink or violet (albino)</button>
 				<button value="different-colored">Each eye is a different color</button>
 			</fieldset>
 
@@ -431,13 +431,13 @@
 			</fieldset>
 
 			<fieldset id="vehicle_make_select" class="hidden">
-				<legend>Great. Let's drill down to find the manufacturer:</legend>
-				<button value="vehicle_make_1">Acura to Chevrolet</button>
-				<button value="vehicle_make_2">Chrysler to Honda</button>
-				<button value="vehicle_make_3">Hummer to Lamborghini</button>
-				<button value="vehicle_make_4">Land Rover to Mini</button>
-				<button value="vehicle_make_5">Mitsubishi to Saturn</button>
-				<button value="vehicle_make_6">Scion to Volvo</button>
+				<legend>Great. Find the manufacturer (alpha by name):</legend>
+				<button value="vehicle_make_1">Acura–Chevrolet</button>
+				<button value="vehicle_make_2">Chrysler–Honda</button>
+				<button value="vehicle_make_3">Hummer–Lamborghini</button>
+				<button value="vehicle_make_4">Land Rover–Mini</button>
+				<button value="vehicle_make_5">Mitsubishi–Saturn</button>
+				<button value="vehicle_make_6">Scion–Volvo</button>
 				<button value="prompt">Other</button>
 			</fieldset>
 
@@ -635,6 +635,7 @@
 
 	<!-- JavaScript -->
 	<script src="../static/index.js"></script>
+	<script src="../static/parse_suspect.js"></script>
 	<script src="../static/router.js"></script>
 
 </body>

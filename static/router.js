@@ -8,40 +8,22 @@ function handleSelection(ans, question) {
 		},
 
 		emergency: ans => {
-			if (ans) window.location.href="tel:911"
+			if (ans) window.location.href="tel:911" // Call 911 (this option only appears on mobile)
 		},
 
 		// Are you reporting drugs, some other crime, or a fugitive?
 		tip: ans => {
 			if (ans == "fugitive") {
-				tip.category = ans 
+				tip.category = "Fugitive"
 				nextQuestion("gender") // Skip crime questions
 			} 
-			else if (ans == "drugs") nextQuestion("drug_activity")
+			else if (ans == "drugs") {
+				tip.category = "Narcotics"
+				nextQuestion("who")
+			}
 			else nextQuestion("violent_crime")
 		},
 
-		// DRUGS --------------------------------
-
-		drug_activity: ans => {
-			if (ans) tip.category = "Narcotics " + ans
-			nextQuestion("drug_type")
-		},
-
-		drug_type: ans => {
-			if (ans == "prompt") nextQuestion("drug_type_prompt")
-			else {
-				tip.category += ` (${ans})`
-				nextQuestion("who")
-			}
-		},
-
-		drug_type_prompt: ans => {
-			if (ans) {
-				tip.category += ` (${ans})`
-				nextQuestion("who")
-			}
-		},
 
 		// TYPE OF CRIME ------------------------
 
@@ -49,7 +31,7 @@ function handleSelection(ans, question) {
 		violent_crime: ans => {
 			if (ans == "assault") nextQuestion("robbery")
 			else if (ans == "homicide") {
-				tip.category = ans
+				tip.category = "Homicide"
 				nextQuestion("when")
 			}
 			else nextQuestion("property_crime")
@@ -58,7 +40,7 @@ function handleSelection(ans, question) {
 		// Was property taken by force?
 		robbery: ans => {
 			if (ans) {
-				tip.category = "robbery"
+				tip.category = ans
 				nextQuestion("when")
 			}
 			else nextQuestion("domestic_violence")
@@ -66,31 +48,24 @@ function handleSelection(ans, question) {
 
 		// Domestic violence?
 		domestic_violence: ans => {
-			if (ans) {
-				tip.category = "domestic violence"
-				nextQuestion("when")
-			} else {
-				tip.category = "assault"
-				nextQuestion("when")
-			}
+			tip.category = ans
+			nextQuestion("when")
 		},
 
 		// Property crime?
 		property_crime: ans => {
-			if (ans == "larceny") nextQuestion("burglary")
-			else if (ans == "damage") nextQuestion("arson")
+			if (ans == "stolen") nextQuestion("burglary")
+			else if (ans == "damaged") nextQuestion("arson")
 			else nextQuestion("economic_crime")
 		},
 
 		burglary: ans => {
-			if (ans) tip.category = "burglary"
-			else tip.category = "larceny"
+			tip.category = ans
 			nextQuestion("when")
 		},
 
 		arson: ans => {
-			if (ans) tip.category = "arson"
-			else tip.category = "vandalism"
+			tip.category = ans
 			nextQuestion("when")
 		},
 
@@ -182,7 +157,29 @@ function handleSelection(ans, question) {
 			suspect.gender = ans
 			setGenderPronouns(ans)
 			setSuspectOrdinal() // "First suspect", "Second suspect", etc.
-			nextQuestion("name")
+			if (tip.category == "Narcotics") nextQuestion("drug_activity")
+			else nextQuestion("name")
+		},
+
+		// Narcotics suspects only
+		drug_activity: ans => {
+			suspect.drug_activity = ans
+			nextQuestion("drug_type")
+		},
+
+		drug_type: ans => {
+			if (ans == "prompt") nextQuestion("drug_type_prompt")
+			else {
+				suspect.drug_type = ans
+				nextQuestion("name")
+			}
+		},
+
+		drug_type_prompt: ans => {
+			if (ans) {
+				suspect.drug_type = ans
+				nextQuestion("name")
+			}
 		},
 		
 		// Do you know suspect's name?
@@ -488,7 +485,6 @@ function handleSelection(ans, question) {
 			if (ans == "prompt") nextQuestion("vehicle_marks_prompt")
 			else nextQuestion("vehicle_tag")
 		},
-
 		vehicle_marks_prompt: ans => {
 			suspect.vehicle_marks = ans
 			nextQuestion("vehicle_tag")
@@ -499,7 +495,6 @@ function handleSelection(ans, question) {
 			if (ans == "prompt") nextQuestion("vehicle_tag_prompt")
 			else nextQuestion("another_suspect")
 		},
-
 		vehicle_tag_prompt: ans => {
 			suspect.vehicle_tag = ans
 			// If user has reported less than 5 suspects, ask if there are more
