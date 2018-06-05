@@ -1,4 +1,5 @@
 function handleSelection(ans, question) {
+
 	// Record the selected answer choice and route to the next question
 	const router = {
 		
@@ -14,11 +15,12 @@ function handleSelection(ans, question) {
 		// Are you reporting drugs, some other crime, or a fugitive?
 		tip: ans => {
 			if (ans == "fugitive") {
-				tip.category = "Fugitive"
+				app.tip.category = "Fugitive"
+				app.suspects[app.count] = new Suspect // create new Suspect object
 				nextQuestion("gender") // Skip crime questions
 			} 
 			else if (ans == "drugs") {
-				tip.category = "Narcotics"
+				app.tip.category = "Narcotics"
 				nextQuestion("who")
 			}
 			else nextQuestion("violent_crime")
@@ -31,7 +33,7 @@ function handleSelection(ans, question) {
 		violent_crime: ans => {
 			if (ans == "assault") nextQuestion("robbery")
 			else if (ans == "homicide") {
-				tip.category = "Homicide"
+				app.tip.category = "Homicide"
 				nextQuestion("when")
 			}
 			else nextQuestion("property_crime")
@@ -40,7 +42,7 @@ function handleSelection(ans, question) {
 		// Was property taken by force?
 		robbery: ans => {
 			if (ans) {
-				tip.category = ans
+				app.tip.category = ans
 				nextQuestion("when")
 			}
 			else nextQuestion("domestic_violence")
@@ -48,7 +50,7 @@ function handleSelection(ans, question) {
 
 		// Domestic violence?
 		domestic_violence: ans => {
-			tip.category = ans
+			app.tip.category = ans
 			nextQuestion("when")
 		},
 
@@ -60,19 +62,19 @@ function handleSelection(ans, question) {
 		},
 
 		burglary: ans => {
-			tip.category = ans
+			app.tip.category = ans
 			nextQuestion("when")
 		},
 
 		arson: ans => {
-			tip.category = ans
+			app.tip.category = ans
 			nextQuestion("when")
 		},
 
 		// Was this an economic crime?
 		economic_crime: ans => {
 			if (ans) {
-				tip.category = ans
+				app.tip.category = ans
 				nextQuestion("when")
 			} 
 			else nextQuestion("sex_crime")
@@ -81,7 +83,7 @@ function handleSelection(ans, question) {
 		// Sex offense?
 		sex_crime: ans => {
 			if (ans) {
-				tip.category = ans
+				app.tip.category = ans
 				nextQuestion("when")
 			} 
 			else nextQuestion("hit_and_run")
@@ -95,14 +97,14 @@ function handleSelection(ans, question) {
 
 		// Fatalities?
 		fatalities: ans => {
-			if (ans) tip.category = "fatal hit and run"
-			else tip.category = "hit and run"
+			if (ans) app.tip.category = "fatal hit and run"
+			else app.tip.category = "hit and run"
 			nextQuestion("dui") // Ask if driver was drinking
 		},
 
 		// Driver drunk or on drugs?
 		dui: ans => {
-			if (ans) tip.category = `${tip.crime.category} (DUI)`
+			if (ans) app.tip.category = `${app.tip.crime.category} (DUI)`
 			nextQuestion("when")
 		},
 
@@ -112,13 +114,13 @@ function handleSelection(ans, question) {
 				if (ans == "prompt") nextQuestion("when_prompt")
 				else {
 					ans = new Date().toISOString().slice(0, 10)
-					tip.when = ans
+					app.tip.when = ans
 				}
 			nextQuestion("where")
 		},
 
 		when_prompt: ans => {
-			if (ans) tip.when = ans
+			if (ans) app.tip.when = ans
 			nextQuestion("where")
 		},
 
@@ -129,18 +131,18 @@ function handleSelection(ans, question) {
 		},
 
 		where_prompt: ans => {
-			if (ans) tip.where = ans
+			if (ans) app.tip.where = ans
 			nextQuestion("who")
 		},
 
-		// Anything else?
+		// Any other details?
 		misc: ans => {
 			if (ans) nextQuestion("misc_prompt")
 			else nextQuestion("submit")
 		},
 
 		misc_prompt: ans => {
-			if (ans) tip.misc = ans
+			if (ans) app.tip.details = ans
 			nextQuestion("submit")
 		},
 
@@ -148,36 +150,39 @@ function handleSelection(ans, question) {
 
 		// Do you have any info about the suspect?
 		who: ans => {
-			if (ans) nextQuestion("gender")
+			if (ans) { // If yes:
+				app.suspects[app.count] = new Suspect // create new Suspect object
+				nextQuestion("gender") // ask about gender
+			}
 			else nextQuestion("vehicle") // Skip to vehicle questions
 		},
 
 		// Male or female?
 		gender: ans => {
-			suspect.gender = ans
+			app.suspects[app.count].gender = ans
 			setGenderPronouns(ans)
 			setSuspectOrdinal() // "First suspect", "Second suspect", etc.
-			if (tip.category == "Narcotics") nextQuestion("drug_activity")
+			if (app.tip.category == "Narcotics") nextQuestion("drug_activity")
 			else nextQuestion("name")
 		},
 
 		// Narcotics suspects only
 		drug_activity: ans => {
-			suspect.drug_activity = ans
+			app.suspects[app.count].drug_activity = ans
 			nextQuestion("drug_type")
 		},
 
 		drug_type: ans => {
 			if (ans == "prompt") nextQuestion("drug_type_prompt")
 			else {
-				suspect.drug_type = ans
+				app.suspects[app.count].drug_type = ans
 				nextQuestion("name")
 			}
 		},
 
 		drug_type_prompt: ans => {
 			if (ans) {
-				suspect.drug_type = ans
+				app.suspects[app.count].drug_type = ans
 				nextQuestion("name")
 			}
 		},
@@ -189,7 +194,7 @@ function handleSelection(ans, question) {
 		},
 
 		name_prompt: ans => {
-			suspect.name += ans
+			app.suspects[app.count].name = ans
 			if (ans) setName(ans)
 			nextQuestion("alias")
 		},
@@ -201,13 +206,13 @@ function handleSelection(ans, question) {
 		},
 
 		alias_prompt: ans => {
-			suspect.aliases = ans
+			app.suspects[app.count].aliases = ans
 			nextQuestion("age")
 		},
 
 		// Age?
 		age: ans => {
-			suspect.age = ans
+			app.suspects[app.count].age = ans
 			nextQuestion("ethnicity")
 		},
 
@@ -219,7 +224,7 @@ function handleSelection(ans, question) {
 		ethnicity: ans => {
 			if (ans == "other") nextQuestion("ethnicity_other")
 			else {
-				suspect.ethnicity = ans
+				app.suspects[app.count].ethnicity = ans
 				nextQuestion("skin")
 			}
 		},
@@ -227,31 +232,31 @@ function handleSelection(ans, question) {
 		ethnicity_other: ans => {
 			if (ans == "prompt") nextQuestion("ethnicity_prompt")
 			else {
-				suspect.ethnicity = ans
+				app.suspects[app.count].ethnicity = ans
 				nextQuestion("skin")
 			}
 		},
 
 		ethnicity_prompt: ans => {
-			suspect.ethnicity = ans
+			app.suspects[app.count].ethnicity = ans
 			nextQuestion("skin")
 		},
 
 		// Skin tone?
 		skin: ans => {
-			suspect.skin = ans
+			app.suspects[app.count].skin = ans
 			nextQuestion("height")
 		},
 
 		// Height?
 		height: ans => {
-			suspect.height = ans
+			app.suspects[app.count].height = ans
 			nextQuestion("weight")
 		},
 
 		// Weight?
 		weight: ans => {
-			suspect.weight = ans
+			app.suspects[app.count].weight = ans
 			nextQuestion("hair")
 		},
 
@@ -259,8 +264,8 @@ function handleSelection(ans, question) {
 		hair: ans => {
 			if (ans == "yes") nextQuestion("hair_length")
 			else if (ans == "no") {
-				suspect.hair = "shaved or bald"
-				if (suspect.gender == "male") nextQuestion("facial_hair")
+				app.suspects[app.count].hair = "shaved or bald"
+				if (app.suspects[app.count].gender == "male") nextQuestion("facial_hair")
 				else nextQuestion("marks")
 			}
 			else nextQuestion("marks")
@@ -268,7 +273,7 @@ function handleSelection(ans, question) {
 
 		// Hair length?
 		hair_length: ans => {
-			suspect.hair = ans
+			app.suspects[app.count].hair = ans
 			nextQuestion("hair_color")
 		},
 
@@ -276,26 +281,26 @@ function handleSelection(ans, question) {
 		hair_color: ans => {
 			if (ans == "prompt") nextQuestion("hair_color_prompt")
 			else {
-				suspect.hair_color = ans
+				app.suspects[app.count].hair_color = ans
 				nextQuestion("hair_type")
 			}
 		},
 
 		hair_color_prompt: ans => {
-			suspect.hair_color = ans
+			app.suspects[app.count].hair_color = ans
 			nextQuestion("hair_type")
 		},
 
 		// Is the hair curly?
 		hair_type: ans => {
-			suspect.hair_type = ans
-			if (suspect.gender == "male") nextQuestion("facial_hair")
+			app.suspects[app.count].hair_type = ans
+			if (app.suspects[app.count].gender == "male") nextQuestion("facial_hair")
 			else nextQuestion("marks")
 		},
 
 		// Facial hair?
 		facial_hair: ans => {
-			suspect.facial_hair = ans
+			app.suspects[app.count].facial_hair = ans
 			nextQuestion("eyes")
 		},
 
@@ -303,18 +308,18 @@ function handleSelection(ans, question) {
 		eyes: ans => {
 			if (ans == "other") nextQuestion("eyes_other")
 			else {
-				suspect.eyes = ans
+				app.suspects[app.count].eyes = ans
 				nextQuestion("glasses")
 			}
 		},
 		eyes_other: ans => {
-			suspect.eyes = ans
+			app.suspects[app.count].eyes = ans
 			nextQuestion("glasses")
 		},
 
 		// Glasses?
 		glasses: ans => {
-			suspect.glasses = ans
+			app.suspects[app.count].glasses = ans
 			nextQuestion("marks")
 		},
 
@@ -325,16 +330,15 @@ function handleSelection(ans, question) {
 		},
 
 		marks_prompt: ans => {
-			suspect.marks = ans
+			app.suspects[app.count].marks = ans
 			nextQuestion("armed")
 		},
 
 		// MISC PERSONAL DETAILS
 
-
 		// Is suspect armed?
 		armed: ans => {
-			suspect.weapons = ans
+			app.suspects[app.count].weapons = ans
 			nextQuestion("gang_member")
 		},
 
@@ -347,42 +351,42 @@ function handleSelection(ans, question) {
 		gang_name: ans => {
 			if (ans == "prompt") nextQuestion("gang_name_prompt")
 			else {
-				suspect.gang = "unknown"
+				app.suspects[app.count].gang = "unknown"
 				nextQuestion("suspect_location")
 			}
 		},
 
 		gang_name_prompt: ans => {
-			suspect.gang = ans
+			app.suspects[app.count].gang = ans
 			nextQuestion("suspect_location")
 		},
 
 		// Address?
 		suspect_location: ans => {
-			suspect.location = ans
+			app.suspects[app.count].location = ans
 			if (ans == "prompt") nextQuestion("suspect_location_prompt")
 			else nextQuestion("vehicle")
 		},
 
 		suspect_location_prompt: ans => {
-			suspect.location = ans
+			app.suspects[app.count].location = ans
 			nextQuestion("suspect_location_time") // ask about dogs
 		},
 
 		// When is suspect usually there?
 		suspect_location_time: ans => {
-			suspect.location_time = ans
+			app.suspects[app.count].location_time = ans
 			nextQuestion("children")
 		},
 		
 		// Dogs at this location?
 		children: ans => {
-			suspect.dogs = ans
+			app.suspects[app.count].dogs = ans
 			nextQuestion("dogs")
 		},
 		// Dogs at this location?
 		dogs: ans => {
-			suspect.dogs = ans
+			app.suspects[app.count].dogs = ans
 			nextQuestion("vehicle")
 		},
 
@@ -408,33 +412,33 @@ function handleSelection(ans, question) {
 
 		// Select make from submenu
 		vehicle_make_1: ans => {
-			suspect.vehicle_make = ans
+			app.suspects[app.count].vehicle_make = ans
 			nextQuestion("vehicle_model")
 		},
 		vehicle_make_2: ans => {
-			suspect.vehicle_make = ans
+			app.suspects[app.count].vehicle_make = ans
 			nextQuestion("vehicle_model")
 		},
 		vehicle_make_3: ans => {
-			suspect.vehicle_make = ans
+			app.suspects[app.count].vehicle_make = ans
 			nextQuestion("vehicle_model")
 		},
 		vehicle_make_4: ans => {
-			suspect.vehicle_make = ans
+			app.suspects[app.count].vehicle_make = ans
 			nextQuestion("vehicle_model")
 		},
 		vehicle_make_5: ans => {
-			suspect.vehicle_make = ans
+			app.suspects[app.count].vehicle_make = ans
 			nextQuestion("vehicle_model")
 		},
 		vehicle_make_6: ans => {
-			suspect.vehicle_make = ans
+			app.suspects[app.count].vehicle_make = ans
 			nextQuestion("vehicle_model")
 		},
 
 		// Old or rare make?
 		vehicle_make_prompt: ans => {
-			suspect.vehicle_make = ans
+			app.suspects[app.count].vehicle_make = ans
 			nextQuestion("vehicle_model")
 		},
 
@@ -444,19 +448,19 @@ function handleSelection(ans, question) {
 			else nextQuestion("vehicle_type")
 		},
 		vehicle_model_prompt: ans => {
-			suspect.vehicle_model = ans
+			app.suspects[app.count].vehicle_model = ans
 			nextQuestion("vehicle_age")
 		},
 
 		// Type?
 		vehicle_type: ans => {
-			suspect.vehicle_type = ans
+			app.suspects[app.count].vehicle_type = ans
 			nextQuestion("vehicle_age")
 		},
 
 		// Vehicle age?
 		vehicle_age: ans => {
-			suspect.vehicle_age = ans
+			app.suspects[app.count].vehicle_age = ans
 			nextQuestion("vehicle_color")
 		},
 
@@ -464,19 +468,19 @@ function handleSelection(ans, question) {
 		vehicle_color: ans => {
 			if (ans == "other") nextQuestion("vehicle_color_other")
 			else {
-				suspect.vehicle_color = ans
+				app.suspects[app.count].vehicle_color = ans
 				nextQuestion("vehicle_marks")
 			} 
 		},
 		vehicle_color_other: ans => {
 			if (ans == "prompt") nextQuestion("vehicle_color_prompt")
 			else {
-				suspect.vehicle_color = ans
+				app.suspects[app.count].vehicle_color = ans
 				nextQuestion("vehicle_marks")
 			}
 		},
 		vehicle_color_prompt: ans => {
-			suspect.vehicle_color = ans
+			app.suspects[app.count].vehicle_color = ans
 			nextQuestion("vehicle_marks")
 		},
 
@@ -486,7 +490,7 @@ function handleSelection(ans, question) {
 			else nextQuestion("vehicle_tag")
 		},
 		vehicle_marks_prompt: ans => {
-			suspect.vehicle_marks = ans
+			app.suspects[app.count].vehicle_marks = ans
 			nextQuestion("vehicle_tag")
 		},
 		
@@ -496,17 +500,18 @@ function handleSelection(ans, question) {
 			else nextQuestion("another_suspect")
 		},
 		vehicle_tag_prompt: ans => {
-			suspect.vehicle_tag = ans
+			app.suspects[app.count].vehicle_tag = ans
 			// If user has reported less than 5 suspects, ask if there are more
-			if (suspect.count < 5) nextQuestion("another_suspect")
+			if (app.suspects.length < 5) nextQuestion("another_suspect")
 			else nextQuestion("misc")
 		},
 
 		// Is there another suspect?
 		another_suspect: ans => {
-			parseSuspect(suspect)
+			if (app.suspects.length > 0) parseSuspect(app.suspects[app.count]) // Parse object into readable paragraph
 			if (ans) {
-				suspect.count += 1
+				app.count += 1
+				app.suspects[app.count] = new Suspect // create new Suspect object
 				nextQuestion("gender")
 			} 
 			else nextQuestion("misc")
@@ -521,9 +526,9 @@ function handleSelection(ans, question) {
 				const time =
 					today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()
 				const timestamp = date + " " + time
-				tip.timestamp = timestamp
-				console.log(tip)
-				// submitForm(tip) // Send data to backend
+				app.tip.timestamp = timestamp
+				console.log(app.tip)
+				submitForm(app.tip) // Send data to backend
 				nextQuestion("end")
 			}
 		}

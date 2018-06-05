@@ -1,61 +1,62 @@
-let answered = ["intro"] // Tracks which q's were answered (for back navigation)
-
+const app = {
+	answered: ["intro"], // Tracks which Qs we've answered (for back navigation)
+	suspects: [], // Holds Suspect objects (max of 5)
+	count: 0, // Keeps count of which Suspect object we're on
 // JSON basic structure:
-let tip = {
-	timestamp: "", 
-	category: "",
-	when: "",
-	where: "",
-	misc: "",
-	suspect_1: "",
-	suspect_2: "",
-	suspect_3: "",
-	suspect_4: "",
-	suspect_5: "",
+	tip: {
+		timestamp: "", 
+		category: "",
+		when: "",
+		where: "",
+		details: "",
+		suspect_1: "",
+		suspect_2: "",
+		suspect_3: "",
+		suspect_4: "",
+		suspect_5: "",
+	}
 }
 
-// 
-let suspect = {
-	count: 1,
-	gender: "",
-	weapons: "",
-	name: "",
-	aliases: "",
-	age: "",
-	skin: "",
-	height: "",
-	weight: "",
-	hair_length: "",
-	hair_type: "",
-	hair_color: "",
-	facial_hair: "",
-	marks: "",
-	eyes: "",
-	glasses: "",
-	location: "",
-	location_time: "",
-	children: "",
-	dogs: "",
-	gang: "",
-	drug_activity: "",
-	drug_type: "",
-	vehicle_make: "",
-	vehicle_model: "",
-	vehicle_type: "",
-	vehicle_color: "",
-	vehicle_age: "",
-	vehicle_marks: "",
-	vehicle_tag: ""
+class Suspect {
+	// gender: "",
+	// weapons: "",
+	// name: "",
+	// aliases: "",
+	// age: "",
+	// skin: "",
+	// height: "",
+	// weight: "",
+	// hair_length: "",
+	// hair_type: "",
+	// hair_color: "",
+	// facial_hair: "",
+	// marks: "",
+	// eyes: "",
+	// glasses: "",
+	// location: "",
+	// location_time: "",
+	// children: "",
+	// dogs: "",
+	// gang: "",
+	// drug_activity: "",
+	// drug_type: "",
+	// vehicle_make: "",
+	// vehicle_model: "",
+	// vehicle_type: "",
+	// vehicle_color: "",
+	// vehicle_age: "",
+	// vehicle_marks: "",
+	// vehicle_tag: ""
 }
 
-// Clear and hide open text areas
+// Clear text field (if any) if question has been answered before
 function resetTextAreas(q) {
 	if (q.querySelector("textarea")) {
 		q.querySelector("textarea").value = ""
 	}
 }
 
-// Listen for clicks on all buttons except "Submit" buttons
+// Listen for clicks on all buttons EXCEPT "Submit" buttons
 function addButtonListeners() {
 	const buttons = document.querySelectorAll("button:not(.submit)")
 	for (let i = 0, l = buttons.length; i < l; i++) { // For each button...
@@ -104,40 +105,46 @@ function addTextareaListeners() {
 
 function toggleBackButton() {
 	const back = document.querySelector("#back")
-	if (answered.length > 1 && answered[answered.length - 1] != "end") {
-		back.classList.remove("hidden")
+	// If we've answered more than one Q and we haven't submitted our tip yet:
+	if (app.answered.length > 1 && app.answered[app.answered.length - 1] != "end") {
+		back.classList.remove("hidden") // Show the Back button
 	} else {
 		back.classList.add("hidden")
 	}
 }
 
 function nextQuestion(id) {
+	// Slight delay between Qs to make it feel like the app is "thinking" (also lets user see which button they pressed)
 	setTimeout(() => {
-		const q = document.querySelector("#" + id)
-		q.classList.remove("hidden")
+		const q = document.querySelector("#" + id) // Find next Q by id
+		q.classList.remove("hidden") // Show it
+		// If this question asks for user input:
 		if (q.querySelector("textarea")) {
 			const textarea = q.querySelector("textarea")
-			textarea.focus()
+			textarea.focus() // Put cursor inside text field
 		}
-		document.querySelector("#" + answered[answered.length - 1]).classList.add("hidden")
-		answered.push(id)
+		document.querySelector("#" +app. answered[app.answered.length - 1]).classList.add("hidden")
+		app.answered.push(id)
 		resetTextAreas(q)
 		toggleBackButton()
-	}, 250) // Slight delay for better UX
+	}, 250) // quarter-second delay
 }
 
 function previousQuestion() {
-	// Adjust suspect.count if user goes back to previous suspect
+	// If user adds a new suspect, but then goes back:
 	if (
-		answered[answered.length - 2] == "another_suspect" &&
-		answered[answered.length - 1] == "gender" && 
-		suspect.count > 1
+		( // If the person just answered one of these questions...
+			app.answered[app.answered.length - 2] == "another_suspect" || app.answered[app.answered.length - 2] == "who" ||
+			app.answered[app.answered.length - 2] == "tip"
+			// and goes "back" from here:
+		) && app.answered[app.answered.length - 1] == "gender" 
 	) {
-		suspect.count -= 1
+		app.suspects.pop() // then delete the most recently created Suspect object
+		if (app.count > 0 ) app.count -= 1 // and lower the count
 	}
 	setTimeout(() => {
-		document.querySelector("#" + answered.pop()).classList.add("hidden")
-		const q = document.querySelector("#" + answered[answered.length - 1])
+		document.querySelector("#" + app.answered.pop()).classList.add("hidden")
+		const q = document.querySelector("#" + app. answered[app.answered.length - 1])
 		q.classList.remove("hidden")
 		toggleBackButton()
 	}, 250)
@@ -170,7 +177,7 @@ function setSuspectOrdinal() {
 		3: "fourth",
 		4: "fifth"
 	}
-	document.querySelector("#suspect-ordinal").innerText = ordinals[suspect.count]
+	document.querySelector("#suspect-ordinal").innerText = ordinals[app.suspects.length]
 }
 
 // Update DOM to show ${possessive} name
@@ -187,13 +194,11 @@ function setName(name) {
 function submitForm(tip) {
 	// construct an HTTP request
 	var xhr = new XMLHttpRequest()
-	// xhr.open("POST", "http://127.0.0.1:5000/tip") // Dev only
+	xhr.open("POST", "http://127.0.0.1:5000/tip") // Dev only
 	// xhr.open("POST", "./tip") // Production
 	xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8")
-
 	// send the collected data as JSON
 	xhr.send(JSON.stringify(tip))
-
 	xhr.onloadend = () => {
 		console.log("Sent!")
 	}
