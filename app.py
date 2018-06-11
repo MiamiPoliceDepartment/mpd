@@ -14,7 +14,7 @@ CORS(app) # Allow cross-site requests
 
 # Routes ------------------------------
 @app.route("/")
-def helloWorld():
+def home():
     return render_template("index.html")
 
 @app.route("/tip", methods=["POST", "GET"])
@@ -24,7 +24,7 @@ def saveTip():
             params = request.get_json() # Build a dict from params
             conn = sqlite3.connect("database.db") # Connect to the database
             cursor = conn.cursor() # Instantiate cursor object
-            # Create table if it doesn't exist
+            # Create table if it doesn't exist:
             create_table = """
                 CREATE TABLE IF NOT EXISTS tips (
                     id INTEGER PRIMARY KEY, 
@@ -41,7 +41,7 @@ def saveTip():
             """
             cursor.execute(create_table)
 
-            # Use ? placeholders to prevent SQL injection
+            # Add params to db using ? placeholders to prevent SQL injection
             insert_data = "INSERT INTO tips (time_stamp, category, when_crime, where_crime, details, suspect_1, suspect_2, suspect_3, suspect_4, suspect_5 ) VALUES (?,?,?,?,?,?,?,?,?,?)"
 
             placeholder_data = (params["timestamp"], params["category"], params["when"], params["where"], params["details"], params["suspect_1"], params["suspect_2"], params["suspect_3"], params["suspect_4"], params["suspect_5"])
@@ -51,11 +51,9 @@ def saveTip():
             cursor.close() # Close the cursor
             conn.commit() # Save it
             print("Saved!")
-        # except sqlite3.Error as er:
-        #     print('er:', er.message)
         except:
             conn.rollback()
-            print("Failed to POST data!")
+            print("Exception: Failed to POST data!")
         finally:
             conn.close() # Disconnect from the database
 
@@ -63,8 +61,7 @@ def saveTip():
     # elif (request.method == "GET" and request.headers.get("Authorization") == os.environ["AUTH"]):
         try:
             conn = sqlite3.connect("database.db") # Connect to the database
-            conn.row_factory = sqlite3.Row
-
+            conn.row_factory = sqlite3.Row # Treat rows as objects
             cursor = conn.cursor()
             rows = cursor.execute("SELECT * FROM tips").fetchall() # Get all rows (tips)
 

@@ -12,11 +12,11 @@
 
 <body>
 	<main>
-		<img src="../static/images/mpd_seal.png" alt="Seal of the Miami Police Department">
+		<a href="http://www.miami-police.org"><img src="../static/images/mpd_seal.png" alt="Seal of the Miami Police Department"></a>
 		<div id="form-container">
 
 			<fieldset id="intro" class="">
-				<legend>Hi! I'm with the <strong>Miami Police Department</strong>. How can I help you?</legend>
+				<legend>Hi! I'm the official chatbot of the <strong>Miami Police Department</strong>. How can I help you?</legend>
 				<button value="emergency">I have an emergency</button>
 				<button value="tip">I'd like to submit an anonymous tip</button>
 			</fieldset>
@@ -157,7 +157,7 @@
 
 			<fieldset id="drug_type" class="hidden">
 				<legend>What type of drugs?</legend>
-				<button value="opioid">Prescription Pills (e.g. Fentanyl, Vicodin, OxyContin)</button>
+				<button value="opioid">Prescription Pills (e.g., Fentanyl, Vicodin, OxyContin)</button>
 				<button value="marijuana">Marijuana</button>
 				<button value="cocaine">Cocaine</button>
 				<button value="heroin">Heroin</button>
@@ -175,7 +175,7 @@
 
 			<!-- Questions about the suspect(s) -->
 			<fieldset id="who" class="hidden">
-				<legend>Can you describe the suspect? (If there are several, we'll discuss them one at a time.) </legend>
+				<legend>Can you describe the suspect or the suspect's vehicle? (If there are several suspects, we'll discuss them one at a time.) </legend>
 				<button value="yes">Yes</button>
 				<button value="">No</button>
 			</fieldset>
@@ -362,7 +362,7 @@
 				<button value="firearm">Yes, <span class="pronoun-subject">this suspect</span> has a firearm</button>
 				<button value="knife">Yes, <span class="pronoun-subject">this suspect</span> has a knife or blade</button>
 				<button value="deadly weapon other than a firearm or knife">Yes, <span class="pronoun-subject">this suspect</span> has some other deadly weapon</button>
-				<button value="">Not sure</button>
+				<button value="">No / Not sure</button>
 			</fieldset>
 
 			<fieldset id="gang_member" class="hidden">
@@ -385,7 +385,7 @@
 			</fieldset>
 
 			<fieldset id="suspect_location" class="hidden">
-				<legend>OK. Do you know where we can find <span class="pronoun-object">this suspect</span>?</legend>
+				<legend>Do you know where we can find <span class="pronoun-object">this suspect</span>?</legend>
 				<button value="prompt">Yes</button>
 				<button value="">No</button>
 			</fieldset>
@@ -418,8 +418,21 @@
 				<button value="">No / Not sure</button>
 			</fieldset>
 
+			<fieldset id="social_media" class="hidden">
+				<legend>Does <span class="pronoun-subject">this suspect</span> use social media (e.g., Facebook)?</legend>
+				<button value="prompt">Yes</button>
+				<button value="">No / Not sure</button>
+			</fieldset>
+
+			<fieldset id="social_media_prompt" class="hidden">
+				<legend>OK. Tell me which social media apps <span class="pronoun-subject">this suspect</span> uses and any usernames or profile URLs you know.</legend>
+				<textarea maxlength="300"></textarea>
+				<label class="instructions">Press "Enter" or click "Submit" when you're done</label>
+				<button class="submit">Submit</button>
+			</fieldset>
+
 			<fieldset id="vehicle" class="hidden">
-				<legend>OK. Do you know anything about <span class="pronoun-possessive">the suspect's</span> vehicle?</legend>
+				<legend>Do you know anything about <span class="pronoun-possessive">the suspect's</span> vehicle?</legend>
 				<button value="prompt">Yes</button>
 				<button value="">No</button>
 			</fieldset>
@@ -625,18 +638,21 @@
 				<button value="yes">Yes, I'm done</button>
 			</fieldset>
 
-			<div id="end" class="hidden">
-				Great. I've let the police know. Thank you for reporting!
-			</div>
+			<fieldset id="end" class="hidden">
+				<legend>Great. I've let the police know. Thank you for reporting!</legend>
+				<button value="new">Submit another tip</button>
+				<button value="mpd">Go to the MPD homepage</button>
+			</fieldset>
 
 		<button id="back" class="hidden">← Back</button>
 
 	</main>
 
 	<!-- JavaScript -->
-	<script src="../static/index.js"></script>
+	<!-- <script src="../static/index.js"></script>
 	<script src="../static/parse_suspect.js"></script>
-	<script src="../static/router.js"></script>
+	<script src="../static/router.js"></script> -->
+	<script src="../static/app.min.js"></script>
 
 </body>
 
