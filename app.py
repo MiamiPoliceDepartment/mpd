@@ -57,8 +57,8 @@ def saveTip():
         finally:
             conn.close() # Disconnect from the database
 
-    elif (request.method == "GET" and request.headers.get("Authorization") == "123abc"): # Dev only!   
-    # elif (request.method == "GET" and request.headers.get("Authorization") == os.environ["AUTH"]):
+    # elif (request.method == "GET" and request.headers.get("Authorization") == "123abc"): # Dev only!   
+    elif (request.method == "GET" and request.headers.get("Authorization") == os.environ["AUTH"]): # Production
         try:
             conn = sqlite3.connect("database.db") # Connect to the database
             conn.row_factory = sqlite3.Row # Treat rows as objects
@@ -82,8 +82,8 @@ def saveTip():
 
 @app.route("/drop")
 def dropTip():
-    if (request.headers.get("Authorization") == "123abc"): # Dev only!
-    # if (request.headers.get("Authorization") == os.environ["AUTH"]): # Production
+    # if (request.headers.get("Authorization") == "123abc"): # Dev only!
+    if (request.headers.get("Authorization") == os.environ["AUTH"]): # Production
         try:
             conn = sqlite3.connect("database.db") # Connect to the database
             cursor = conn.cursor() # Instantiate cursor object
