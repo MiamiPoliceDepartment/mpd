@@ -18,7 +18,7 @@ def home():
     return render_template("index.html")
 
 @app.route("/tip", methods=["POST", "GET"])
-def saveTip():
+def tipAPI():
     if (request.method == "POST"):
         try:
             params = request.get_json() # Build a dict from params
