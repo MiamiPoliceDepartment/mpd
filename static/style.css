@@ -5,7 +5,7 @@
 
 /* Set font size relative to viewport width */
 html {
-	font-size: calc(1vw + 1vh + .5vmin);
+	font-size: calc(1vw + 1vh + .75vmin);
   }
 
 body {
