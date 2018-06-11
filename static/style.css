@@ -3,9 +3,11 @@
 	padding: 0;
 }
 
-/* Set font size relative to viewport width */
+/* Set font size relative to viewport size */
 html {
-	font-size: calc(1vw + 1vh + .75vmin);
+	/* font-size: calc(1vw + 1vh + .75vmin); */
+	font-size: 18px;
+	font-size: calc(112.5% + 0.5vw)
   }
 
 body {
