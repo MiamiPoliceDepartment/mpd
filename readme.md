@@ -27,7 +27,7 @@ The workflow consists of the following steps:
     ["'timestamp': '2018-4-26 19:39:2', 'category': 'homicide', 'drug_or_gang_related': 'gang', 'drug': '', 'when': '2018-04-26', 'where': '', 'details': '', 'suspect_1': '', 'suspect_2': '', 'suspect_3': '', 'suspect_4': '', 'suspect_5': ''","'timestamp': '2018-4-26 19:47:23', 'category': 'fugitive', 'drug_or_gang_related': '', 'drug': '', 'when': '', 'where': '', 'details': '', 'suspect_1': 'Suspect is a dark-skinned middle-aged female. Her legal name is believed to be: Jane Doe. She is armed with a firearm. She wears glasses. She may be located at: 123 SW 4 St. There are dogs at this location.', 'suspect_2': 'Suspect is a light-skinned adult male. His face is clean-shaven. He is armed with a knife.', 'suspect_3': '', 'suspect_4': '', 'suspect_5': ''"]
     ```
 
-4. We use the "For Each" action to iterate through every tip, as follows:
+4. We use the "For Each" action to loop through the collection, as follows:
 
 5. For each tip, we use the "Regular Expression" action to replace empty values ('') with hyphens ('-'). This is necessary in order to distinguish the quotes within a tip from the quotes that surround each tip for the purposes of the next step.
 
