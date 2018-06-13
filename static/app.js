@@ -194,11 +194,11 @@ function setSuspectOrdinal() {
     ordinals[app.suspects.length];
 }
 
-// Update DOM to show ${possessive} name
+// Update DOM to show suspect's name where applicable
 function setName(name) {
   var names = document.querySelectorAll(".suspect-name");
   for (var i = 0, l = names.length; i < l; i++) {
-    names[i].innerText = name;
+    names[i].innerText = name; // Note: innerHTML is vulnerable to XSS!
   }
 }
 
