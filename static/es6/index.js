@@ -205,13 +205,28 @@ function submitForm(tip) {
 	}
 }
 
-// Initialize
-addButtonListeners()
-addSubmitListeners()
-addTextareaListeners()
-
 window.onbeforeunload = e => {
 	var dialogText = "Are you sure? Your answers will be lost. (Use the 'Back' button to return to a previous question.)"
-	e.returnValue = dialogText;
-	return dialogText;
+	e.returnValue = dialogText
+	return dialogText
 }
+
+// Set responsive font size
+function responsiveFont() {
+	const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
+	const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
+	const min = w > h ? h : w // Set min to h if h is smaller, else to w
+	const size = Math.round( (w * .01) + (h * .01) + (min * .0075) ) // Equivalent to 1vw + 1vh + .75vmin (using viewport-based measurements in CSS)
+	if (size < 24) size = 24 // Minimum font size (pixels)
+	if (size > 30) size = 30 // Maximum font size (pixels)
+	document.querySelector("html").setAttribute("style", "font-size: " + size + "px")
+  }
+  
+  //Set font size whenever page loads or display size changes
+  window.onload = () => { responsiveFont() }
+  window.onresize = () => { responsiveFont() }
+  
+  // Initialize listeners
+  addButtonListeners()
+  addSubmitListeners()
+  addTextareaListeners()

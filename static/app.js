@@ -929,7 +929,7 @@ function parseSuspect(s) {
 
 // Non-AJAX form submission
 function submitForm(tip) {
-  // construct an HTTP request
+  // varruct an HTTP request
   var xhr = new XMLHttpRequest();
   xhr.open("POST", "http://127.0.0.1:5000/tip"); // Dev only
   // xhr.open("POST", "./tip") // Production
@@ -947,7 +947,21 @@ window.onbeforeunload = function(e) {
     "Are you sure? Your answers will be lost. (Use the 'Back' button to return to a previous question.)";
   e.returnValue = dialogText;
   return dialogText;
-};
+}
+
+// Set responsive font size
+function responsiveFont() {
+	var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+	var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+	var min = w > h ? h : w // Set min to h if h is smaller, else to w
+  var size = Math.round( (w * .01) + (h * .01) + (min * .0075) ); // Equivalent to 1vw + 1vh + .75vmin (using viewport-based measurements in CSS)
+	if (size > 34) size = 34; // Maximum
+	document.querySelector("html").setAttribute("style", "font-size: " + size + "px");
+}
+  
+//Set font size whenever page loads or display size changes
+window.onload = function() { responsiveFont() };
+window.onresize = function() { responsiveFont() };
 
 // Initialize
 addButtonListeners();

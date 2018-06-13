@@ -3,19 +3,8 @@
 	padding: 0;
 }
 
-/* Set font size relative to viewport size */
 html {
-	font-size: 18px;
-}
-@media screen and (min-width: 320px) {
-	html {
-		font-size: calc(18px + 4 * ((100vw - 320px) / 680));
-	}
-}
-@media screen and (min-width: 1000px) {
-	html {
-		font-size: 22px;
-	}
+	font-size: 34px; /* Fallback (size is set by JavaScript) */
 }
 
 body {
