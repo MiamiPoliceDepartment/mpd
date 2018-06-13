@@ -31,13 +31,14 @@ function handleSelection(ans, question) {
 
 		// Was this a violent crime?
 		violent_crime: ans => {
-			if (ans == "assault") nextQuestion("robbery")
-			else if (ans == "homicide") {
-				app.tip.category = "Homicide"
-				nextQuestion("when")
+			if (ans == "assault") nextQuestion("robbery");
+			else if (ans) {
+			  if (ans == "homicide") app.tip.category = "Homicide";
+			  else app.tip.category = "Sexual Assault";
+			  nextQuestion("when");
 			}
-			else nextQuestion("property_crime")
-		},
+			else nextQuestion("property_crime");
+		  },
 
 		// Was property taken by force?
 		robbery: ans => {
