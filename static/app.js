@@ -931,8 +931,8 @@ function parseSuspect(s) {
 function submitForm(tip) {
   // varruct an HTTP request
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "http://127.0.0.1:5000/tip"); // Dev only
-  // xhr.open("POST", "./tip") // Production
+  // xhr.open("POST", "http://127.0.0.1:5000/tip"); // Dev only
+  xhr.open("POST", "./tip") // Production
   xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
   // send the collected data as JSON
   xhr.send(JSON.stringify(tip));
