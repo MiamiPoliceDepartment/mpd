@@ -767,7 +767,7 @@ function handleSelection(ans, question) {
           }
         };
         nextQuestion("tip");
-      } else window.location.href = "http://www.miami-police.org";
+      } else window.location = "http://www.miami-police.org";
     }
 
     // console.log("Question: " + question + ". Answer: " + ans)
