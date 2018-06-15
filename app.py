@@ -11,6 +11,7 @@ import os
 app = Flask(__name__) #  Create an instance of the Flask class. The first argument is the name of the application’s module or package.
 CORS(app) # Allow cross-site requests
 # app.config.from_object('config') # In development, access config variables via app.config["VAR_NAME"].
+app.run()
 
 # Routes ------------------------------
 @app.route("/")
