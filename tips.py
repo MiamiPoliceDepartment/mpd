@@ -11,6 +11,8 @@ import os
 app = Flask(__name__) #  Create an instance of the Flask class. The first argument is the name of the application’s module or package.
 CORS(app) # Allow cross-site requests
 
+wsgi_app = app.wsgi_app # define for IIS module registration
+
 # Routes ------------------------------
 @app.route("/")
 def home():
