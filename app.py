@@ -16,6 +16,11 @@ wsgi_app = app.wsgi_app # define for IIS module registration
 if __name__ == '__main__': 
     app.run()
 
+wsgi_app = app.wsgi_app
+
+if __name__ == '__main__':
+    app.run()
+
 # Routes ------------------------------
 @app.route("/")
 def home():
