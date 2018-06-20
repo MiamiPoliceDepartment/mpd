@@ -1,6 +1,6 @@
 # Dependencies ------------------------
 from flask import Flask # Import the Flask class
-from flask_cors import CORS, cross_origin # Allow cross-site requests
+# from flask_cors import CORS, cross_origin # Allow cross-site requests on localhost (dev only!)
 from flask import render_template
 from flask import request # Enable "request" object (params, etc.)
 import sqlite3
@@ -9,7 +9,7 @@ import os
 
 # Config ------------------------------
 app = Flask(__name__) #  Create an instance of the Flask class. The first argument is the name of the application’s module or package.
-# CORS(app) # Allow cross-site requests
+# CORS(app) # Allow cross-site requests on localhost (dev only)
 
 wsgi_app = app.wsgi_app # define for IIS module registration
 if __name__ == '__main__': 
