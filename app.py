@@ -9,7 +9,12 @@ import os
 
 # Config ------------------------------
 app = Flask(__name__) #  Create an instance of the Flask class. The first argument is the name of the application’s module or package.
-CORS(app) # Allow cross-site requests
+# CORS(app) # Allow cross-site requests
+
+wsgi_app = app.wsgi_app # define for IIS module registration
+
+if __name__ == '__main__': 
+    app.run()
 
 # Routes ------------------------------
 @app.route("/")
