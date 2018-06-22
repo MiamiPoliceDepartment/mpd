@@ -25,7 +25,7 @@ def tipAPI():
     if (request.method == "POST"):
         try:
             params = request.get_json() # Build a dict from params
-            conn = sqlite3.connect("tips.db") # Connect to the database
+            conn = sqlite3.connect("app.db") # Connect to the database
             cursor = conn.cursor() # Instantiate cursor object
             # Create table if it doesn't exist:
             create_table = """
@@ -63,7 +63,7 @@ def tipAPI():
     # elif (request.method == "GET" and request.headers.get("Authorization") == "123abc"): # Dev only!   
     elif (request.method == "GET" and request.headers.get("Authorization") == os.environ["AUTH"]): # Production
         try:
-            conn = sqlite3.connect("tips.db") # Connect to the database
+            conn = sqlite3.connect("app.db") # Connect to the database
             conn.row_factory = sqlite3.Row # Treat rows as objects
             cursor = conn.cursor()
             rows = cursor.execute("SELECT * FROM tips").fetchall() # Get all rows (tips)
@@ -88,7 +88,7 @@ def dropTip():
     # if (request.headers.get("Authorization") == "123abc"): # Dev only!
     if (request.headers.get("Authorization") == os.environ["AUTH"]): # Production
         try:
-            conn = sqlite3.connect("tips.db") # Connect to the database
+            conn = sqlite3.connect("app.db") # Connect to the database
             cursor = conn.cursor() # Instantiate cursor object
             cursor.execute("DROP TABLE IF EXISTS tips") 
             cursor.close() # Close the cursor
