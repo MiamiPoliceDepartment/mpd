@@ -79,6 +79,10 @@ To edit the workflow, go to [MPD Tips](https://mia.sharepoint.com/sites/MiamiPD/
 
 *Note: Due to Nintex's limited JSON support, the workflow relies heavily on Regular Expressions ("regex"). See https://community.nintex.com/thread/4194?commentID=22010#comment-22010. This is effective, but also a hack. If Nintex adds tools to parse JSON objects, then the workflow should be updated.*
 
+###Running the workflow
+
+The workflow is scheduled to automatically run every hour. It can also be manually started from the [Anonymous Tips](https://mia.sharepoint.com/sites/MiamiPD/nintex/Lists/Tipster/AllItems.aspx) list.
+
 ### Understanding the workflow
 
 The workflow consists of the following steps:
