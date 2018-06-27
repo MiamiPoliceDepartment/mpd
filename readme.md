@@ -87,19 +87,19 @@ The workflow is scheduled to automatically run every hour. It can also be manual
 
 The workflow consists of the following steps:
 
-####1. Define API key
+#### 1. Define API key
 
 We use the **Build Dictionary** action to create an `auth_key` variable to hold the API's authorization key. The key is a string of 64 random hexadecimal characters generated at https://www.grc.com/passwords.html.
 
 *Note: The key must match the 'AUTH' config variable we set in our Azure environment (Azure > Dashboard > Application Settings). If AUTH changes, then the workflow must be updated.*
 
-####2. GET tips from API
+#### 2. GET tips from API
 
 We use the **Call HTTP Web Service** action to send a GET request to the API. This request *must* include the authorization key, or it will fail. A successful request returns a JSON, which we store in the variable `json`. The contents of `json` look like this (*JSON objects are orderless, so the order of the keys may vary*):
 
     {"0": {"timestamp": "2018-4-26 19:39:2", "category": "homicide", "when": "2018-04-26", "where": "123 SW 4 Street", "details": "Body buried in the backyard", "suspect_1": "", "suspect_2": "", "suspect_3": "", "suspect_4": "", "suspect_5": ""},"1": {"timestamp": "2018-4-26 19:47:23", "category": "fugitive", "when": "", "where": "", "details": " ,"suspect_1": "Suspect is a dark-skinned middle-aged female. Her legal name is: Jane Doe. She is armed with a firearm. She wears glasses. She may be located at: 123 SW 4 St. There are dogs at that location.", "suspect_2": "Suspect is a light-skinned adult male. His face is clean-shaven. He is armed with a knife.", "suspect_3": "", "suspect_4": "", "suspect_5": ""}}
 
-####3. Split API response into a collection
+#### 3. Split API response into a collection
 
 Normally, we would query the JSON directly (e.g., `json["0"]["timestamp"]`), but Nintex does not support JSON-parsing. Instead, it treats the response as an ordinary string object. So, we must use the **Regular Expression** action to *extract* all tips and store them in an array (or "collection" in Nintex terms) named `tips`.
 
@@ -113,7 +113,7 @@ If we used that pattern to extract tips from the `json` example above, then `tip
 
 Note: I use single quotes here for readability, but behind the scenes, they are actually escaped double quotes, like this: `"\"timestamp\": \"2018-4-26 19:39:2\"`
     
-####4. Query "Tip Recipients" list
+#### 4. Query "Tip Recipients" list
 
 In order for the workflow to properly run, the personnel to be notified when new tips arrive must be manually added to the [Tip Recipients](https://mia.sharepoint.com/sites/MiamiPD/nintex/Lists/Tip%20Recipients/AllItems.aspx?viewpath=%2Fsites%2FMiamiPD%2Fnintex%2FLists%2FTip%20Recipients%2FAllItems.aspx) list. That list stores each recipient's O365 profile object in the 'Assigned To' column.
 
@@ -121,7 +121,7 @@ We use the **Query List** action to pull the 'Work Email' property from each rec
 
     [{"Assigned_x0020_To":{"EMail":"01234@miami-police.org"},"FileLeafRef":"1_.000"}, {"Assigned_x0020_To":{"EMail":"56789@miami-police.org"},"FileLeafRef":"1_.000"}]
 
-####5. Extract recipient emails
+#### 5. Extract recipient emails
 
 We use a **Regular Expression** action to *extract* the email addresses from `recipients`.
 
@@ -132,11 +132,11 @@ The addresses are saved to `recipients`, which now looks like this:
     ["01234@miami-police.org", "56789@miami-police.org"]
 
 
-####6. Parse each tip
+#### 6. Parse each tip
 
 For `each_tip`, we do the following:
 
-####7. Extract value from each key/value pair
+#### 7. Extract value from each key/value pair
 
 This step consists of ten **Regular Expression** actions running in a **Parallel Block**. It's a bit of a hack. For reasons unknown, Nintex does not provide an operation to save a regex match directly to a variable. We can, however, trim away any substrings we don't want by *replacing* them with empty strings, which leaves only the value we *do* want.
 
@@ -148,14 +148,14 @@ This pattern uses regex negative lookbacks and lookaheads to match everything *b
 
 The trimmed strings are stored in variables. For example, the output of the above regex is stored in `timestamp`, which looks like this: `2018-4-26 19:39:2`
 
-####8. Add tip to list
+#### 8. Add tip to list
 
 We use the **Create List Item** action to add these ten variables to the corresponding columns in the [Anonymous Tips](https://mia.sharepoint.com/sites/MiamiPD/nintex/Lists/Tipster/AllItems.aspx) list on Sharepoint.
 
-####9. Email each recipient
+#### 9. Email each recipient
 
 We use the **For Each** action to loop through `recipients`. For `each_recipient`, we use the **Send an Email** action to alert the recipient that a new tip has come in. 
 
-####10. Reset API database
+#### 10. Reset API database
 
 We use the "Call HTTP Web Service" action to send another GET request to the API (again, this request *must* include the authorization key). This request tells the app to clear its contents.
