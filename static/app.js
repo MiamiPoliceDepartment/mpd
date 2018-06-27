@@ -104,7 +104,9 @@ function addTextareaListeners() {
       else textarea.style.color = "inherit";
       // Submit when user hits "Enter"
       if (e.key == "Enter") {
-        handleSelection(textarea.value.replace("\n", ""), q.id);
+        // Strip out everything except periods, commas, hyphens, letters, numbers, whitespace, and underscores 
+        var value = textarea.value.replace(/[^.,\-\w\s]/gi, "");
+        handleSelection(value, q.id);
       }
     });
   }
