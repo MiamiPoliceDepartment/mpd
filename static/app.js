@@ -86,7 +86,7 @@ function addSubmitListeners() {
       e.preventDefault;
       var q = e.target.parentNode;
       var textarea = q.querySelector("textarea");
-      handleSelection(textarea.value.replace("\n", ""), q.id);
+      handleSelection(scrubText(textarea.value), q.id);
     });
   }
 }
@@ -104,12 +104,15 @@ function addTextareaListeners() {
       else textarea.style.color = "inherit";
       // Submit when user hits "Enter"
       if (e.key == "Enter") {
-        // Strip out everything except periods, commas, hyphens, letters, numbers, whitespace, and underscores 
-        var value = textarea.value.replace(/[^.,\-\w\s]/gi, "");
-        handleSelection(value, q.id);
+        handleSelection(scrubText(textarea.value), q.id);
       }
     });
   }
+}
+
+function scrubText(text) {
+  // Remove everything alphanumeric characters, special characters, and reserved characters used for query URLs
+  return text.replace(/\\n|[^\w\s.,!?;:\/@=&$%\-+*'()]/gi, "");
 }
 
 function toggleBackButton() {
