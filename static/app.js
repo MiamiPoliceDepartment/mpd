@@ -111,8 +111,8 @@ function addTextareaListeners() {
 }
 
 function scrubText(text) {
-  // Remove everything alphanumeric characters, special characters, and reserved characters used for query URLs
-  return text.replace(/\\n|[^\w\s.,!?;:\/@=&$%\-+*'()]/gi, "");
+  // Remove everything but alphanumeric characters, special characters, and reserved characters used for query URLs
+  return text.replace(/\r|\n|[^\w\s.,!?;:\/@=&$%\-+*'()]/gi, "");
 }
 
 function toggleBackButton() {
